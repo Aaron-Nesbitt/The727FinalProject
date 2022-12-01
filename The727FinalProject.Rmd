@@ -20,7 +20,12 @@ library(tidytext)
 library(ggmap)
 ```
 
-We search we original tweets, allowing for up to 18 thousand. We ran the function at 5 pm on Tuesday November 29th. 
+We search we original tweets, allowing for up to 18 thousand. We ran the function at 5 pm on Tuesday November 29th.
+
+```{r}
+
+```
+
 ```{r eval=FALSE, include=FALSE}
 musk <- search_tweets(
   q = "musk Twitter, lang:en",
@@ -31,6 +36,17 @@ musk <- search_tweets(
 
 ```{r}
 head(musktweetsfinal$text, n=10)
+```
+
+```{r}
+colnames(musktweetsfinal)
+```
+This is a sentiment analysis of the tweets. 
+```{r, eval=FALSE}
+#install.packages("SentimentAnalysis")
+library(SentimentAnalysis)
+sentiments = analyzeSentiment(iconv(as.character(musktweetsfinal$text), to='UTF-8'))
+head(sentiments)
 ```
 
 
