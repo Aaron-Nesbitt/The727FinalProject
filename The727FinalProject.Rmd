@@ -20,3 +20,17 @@ library(tidytext)
 library(ggmap)
 ```
 
+We search we original tweets, allowing for up to 18 thousand. We ran the function at 5 pm on Tuesday November 29th. 
+```{r eval=FALSE, include=FALSE}
+musk <- search_tweets(
+  q = "musk Twitter, lang:en",
+  n = 18000,
+  include_rts = FALSE
+)
+```
+
+```{r}
+head(musktweetsfinal$text, n=10)
+```
+
+
