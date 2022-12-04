@@ -80,9 +80,9 @@ head(sentiments)
 ```{r}
 #PULL IN DATA FROM PREVIOUS CHUNK USING CSV FILE 
 #library(readr)
-#sentiments <- read_csv("C:/Users/valen/Downloads/sentiments.csv")
+#sentiments <- read_csv("C:/Users/aanes/Downloads/sentiments.csv")
 #View(sentiments)
-````
+```
 
 ```{r}
 #library(vader)
@@ -97,9 +97,52 @@ head(sentiments)
 ```{r}
 ggplot(sentiments, aes(x=WordCount, y=SentimentQDAP)) + geom_point(alpha=.1) + geom_smooth()
 ```
+
 ```{r}
-test <- muskTweets[1:10,]
+library(vader)
+test <- muskTweets[1:1000,]
 vader_scores = vader_df(test$text)
+```
+```{r}
+test2 <- muskTweets[1001:3000,]
+vader_scores2 = vader_df(test2$text)
+```
+
+
+
+```{r}
+test3 <- muskTweets[3001:5000,]
+vader_scores3 = vader_df(test3$text)
+```
+```{r}
+test4 <- muskTweets[5001:7000,]
+vader_scores4 = vader_df(test4$text)
+```
+
+```{r}
+test5 <- muskTweets[7001:9000,]
+vader_scores5 = vader_df(test5$text)
+test6 <- muskTweets[9001:11000,]
+vader_scores6 = vader_df(test6$text)
+```
+
+```{r}
+test7 <- muskTweets[11001:13000,]
+vader_scores7 = vader_df(test7$text)
+test8 <- muskTweets[13001:14193,]
+vader_scores8 = vader_df(test8$text)
+```
+
+
+```{r}
+allvader <- rbind(vader_scores, vader_scores2, vader_scores3,vader_scores4,vader_scores5,vader_scores6,vader_scores7,vader_scores8 )
+```
+
+
+
+```{r}
+sentiments$Vader = allvader$compound
+ggplot(sentiments, aes(x=WordCount, y=Vader)) + geom_point(alpha=.1) + geom_smooth()
 ```
 
 
