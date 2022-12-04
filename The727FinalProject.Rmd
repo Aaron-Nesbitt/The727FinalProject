@@ -23,13 +23,14 @@ library(ggmap)
 We search we original tweets, allowing for up to 18 thousand. We ran the function at 5 pm on Tuesday November 29th.
 
 ```{r}
+musktweetsfinal <- read_csv("C:\\Users\\valen\\Downloads\\musktweetsfinal.csv")
 ```
 
 ```{r eval=FALSE, include=FALSE}
-musk <- search_tweets(
-  q = "musk Twitter, lang:en",
-  n = 18000,
-  include_rts = FALSE
+#musk <- search_tweets(
+#  q = "musk Twitter, lang:en",
+#  n = 18000,
+#  include_rts = FALSE
 )
 ```
 
@@ -44,7 +45,7 @@ colnames(musktweetsfinal)
 ```{r}
 library(quanteda)
 
-opinionWords = c('Apple')
+opinionWords = c('Apple', 'apple','@apple', '@Apple', '#Apple', '#apple', 'Apple\'s', 'apple\'s','-Apple','Apples','@AppleSupport','@AppleTVPlus','#MuskTwitterAppleMeltdown','@Apple!','#AppleMusicLive')
 
 muskTweets = data.frame()
 doNotNeed = data.frame()
@@ -64,46 +65,7 @@ for(i in 1:nrow(musktweetsfinal)){
 }
 ```
 
-```{r, eval =FALSE}
-opinionWords = c('covid')
 
-muskTweets2 = data.frame()
-doNotNeed2 = data.frame()
-
-for(i in 1:nrow(muskTweets)){
-  # break up tweet into individual words
-  tweet = muskTweets$text[i]
-  tweet = tolower(tweet)
-  words = tokens(tweet)
-  # if it contains an irrelevant word, put it in the irrelevant data frame
-  if(length(intersect(words[['text1']], opinionWords))>0){
-    doNotNeed2 = rbind(doNotNeed, musktweetsfinal[i,])
-  }
-  else{
-    muskTweets2 = rbind(muskTweets, musktweetsfinal[i,])
-  }
-}
-```
-
-```{R, eval=FALSE}
-muskTweets3 = data.frame()
-doNotNeed3 = data.frame()
-
-for(i in 1:nrow(muskTweets2)){
-  # break up tweet into individual words
-  tweet = muskTweets2$text[i]
-  tweet = tolower(tweet)
-  words = tokens(tweet)
-  # if it contains an irrelevant word, put it in the irrelevant data frame
-  if(length(intersect(words[['text1']], opinionWords))>0){
-    doNotNeed3 = rbind(doNotNeed, musktweetsfinal[i,])
-  }
-  else{
-    muskTweets3 = rbind(muskTweets2, musktweetsfinal[i,])
-  }
-}
-
-```
 
 
 This is a sentiment analysis of the tweets. 
