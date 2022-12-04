@@ -78,6 +78,13 @@ head(sentiments)
 ```
 
 ```{r}
+#PULL IN DATA FROM PREVIOUS CHUNK USING CSV FILE 
+#library(readr)
+#sentiments <- read_csv("C:/Users/valen/Downloads/sentiments.csv")
+#View(sentiments)
+````
+
+```{r}
 #library(vader)
 # = vader_df(muskTweets$text)
 #sentiments$Vader = vader_scores$compound
