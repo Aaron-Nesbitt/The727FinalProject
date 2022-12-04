@@ -23,7 +23,8 @@ library(ggmap)
 We search we original tweets, allowing for up to 18 thousand. We ran the function at 5 pm on Tuesday November 29th.
 
 ```{r}
-musktweetsfinal <- read_csv("C:\\Users\\valen\\Downloads\\musktweetsfinal.csv")
+#musktweetsfinal <- read_csv("C:\\Users\\valen\\Downloads\\musktweetsfinal.csv")
+muskTweets <- read_csv("C:\\Users\\aanes\\Downloads\\muskTweets.csv")
 ```
 
 ```{r eval=FALSE, include=FALSE}
@@ -70,10 +71,28 @@ for(i in 1:nrow(musktweetsfinal)){
 
 This is a sentiment analysis of the tweets. 
 ```{r, eval=FALSE}
-#install.packages("SentimentAnalysis")
+install.packages("SentimentAnalysis")
 library(SentimentAnalysis)
-sentiments = analyzeSentiment(iconv(as.character(musktweetsfinal$text), to='UTF-8'))
+sentiments = analyzeSentiment(iconv(as.character(muskTweets$text), to='UTF-8'))
 head(sentiments)
+```
+
+```{r}
+#library(vader)
+# = vader_df(muskTweets$text)
+#sentiments$Vader = vader_scores$compound
+#ggplot(sentiments, aes(x=WordCount, y=Vader)) + geom_point(alpha=.1) + geom_smooth()
+```
+
+
+
+
+```{r}
+ggplot(sentiments, aes(x=WordCount, y=SentimentQDAP)) + geom_point(alpha=.1) + geom_smooth()
+```
+```{r}
+test <- muskTweets[1:10,]
+vader_scores = vader_df(test$text)
 ```
 
 
