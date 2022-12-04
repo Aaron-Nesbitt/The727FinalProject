@@ -24,7 +24,7 @@ We search we original tweets, allowing for up to 18 thousand. We ran the functio
 
 ```{r}
 #musktweetsfinal <- read_csv("C:\\Users\\valen\\Downloads\\musktweetsfinal.csv")
-muskTweets <- read_csv("C:\\Users\\aanes\\Downloads\\muskTweets.csv")
+#muskTweets <- read_csv("C:\\Users\\aanes\\Downloads\\muskTweets.csv")
 ```
 
 ```{r eval=FALSE, include=FALSE}
@@ -94,5 +94,11 @@ ggplot(sentiments, aes(x=WordCount, y=SentimentQDAP)) + geom_point(alpha=.1) + g
 test <- muskTweets[1:10,]
 vader_scores = vader_df(test$text)
 ```
+
+
+```{r}
+write.csv(sentiments, "C:\\Users\\aanes\\Downloads\\sentiments.csv")
+```
+
 
 
