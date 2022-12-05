@@ -150,5 +150,9 @@ ggplot(sentiments, aes(x=WordCount, y=Vader)) + geom_point(alpha=.1) + geom_smoo
 write.csv(sentiments, "C:\\Users\\aanes\\Downloads\\sentiments.csv")
 ```
 
+```{r}
+count<- freq(muskTweets$source)
+
+```
 
 
