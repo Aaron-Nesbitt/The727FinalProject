@@ -103,6 +103,12 @@ plotemot2<-plotemot[1:8,]
 quickplot(sentiment, data=plotemot2, weight=count, geom="bar", fill=sentiment, ylab="count")+ggtitle("Survey sentiments")
 
 ```
+```{r}
+write.csv(emotionsALL, "C:/Users/aanes/Documents/emotionsAll.csv")
+write.csv(sentimentsAll, "C:/Users/aanes/Documents/sentimentsAll.csv")
+```
+
+
 
 
 
