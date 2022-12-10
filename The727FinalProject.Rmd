@@ -18,6 +18,8 @@ library(plyr)
 library(tidyverse)
 library(tidytext)
 library(ggmap)
+library(rJava)
+library(qdap)
 ```
 
 We search we original tweets, allowing for up to 18 thousand. We ran the function at 5 pm on Tuesday November 29th.
@@ -34,6 +36,75 @@ We search we original tweets, allowing for up to 18 thousand. We ran the functio
 #  include_rts = FALSE
 )
 ```
+
+#Overall Analsysis of entire tweet corpus
+
+```{r}
+frequent_terms = freq_terms(musktweetsfinal["text"], 30)
+plot(frequent_terms)
+```
+
+```{r}
+musktweetsfinal$bagAllTweets = musktweetsfinal$text %>% iconv("latin1", "ASCII", sub="") %>% scrubber() %sw% qdapDictionaries::Top200Words
+```
+
+```{r}
+frequent_terms2 = freq_terms(musktweetsfinal["bagAllTweets"], 30)
+plot(frequent_terms2)
+```
+```{r}
+frequent_terms3 = freq_terms(musktweetsfinal["bagAllTweets"], 100)
+```
+
+```{r}
+freq_terms3_less <- frequent_terms3[-c(1,2,3,4,5,6,8),]
+```
+
+```{r}
+install.packages("wordcloud")
+install.packages("RColorBrewer")
+
+library(wordcloud)
+library(RColorBrewer)
+```
+
+```{r}
+set.seed(4356)
+wordcloud(words = freq_terms3_less$WORD, freq = freq_terms3_less$FREQ, min.freq = 5,
+          max.words=100, random.order=FALSE, rot.per=0.40, 
+          colors=brewer.pal(8, "Dark2"))
+```
+
+```{r, cache=TRUE}
+sentimentsAll = analyzeSentiment(iconv(as.character(musktweetsfinal$bagAllTweets), to='UTF-8'))
+head(sentiments)
+```
+
+```{r}
+install.packages("syuzhet")
+library(syuzhet)
+```
+
+```{r}
+emotionsALL<-get_nrc_sentiment(musktweetsfinal$bagAllTweets)
+
+```
+
+```{r}
+emotionsALLt<-data.frame(t(emotionsALL))
+#The function rowSums computes column sums across rows for each level of a grouping variable.
+plotemot <- data.frame(rowSums(emotionsALLt[1:17412]))
+#Transformation and cleaning
+names(plotemot)[1] <- "count"
+plotemot <- cbind("sentiment" = rownames(plotemot), plotemot)
+rownames(plotemot) <- NULL
+plotemot2<-plotemot[1:8,]
+#Plot One - count of words associated with each sentiment
+quickplot(sentiment, data=plotemot2, weight=count, geom="bar", fill=sentiment, ylab="count")+ggtitle("Survey sentiments")
+
+```
+
+
 
 ```{r}
 head(musktweetsfinal$text, n=10)
