@@ -22,10 +22,14 @@ library(rJava)
 library(qdap)
 ```
 
-We search we original tweets, allowing for up to 18 thousand. We ran the function at 5 pm on Tuesday November 29th.
+#INTRODUCTION#############################################################
+For our project we put ourselves in the position of marketing strategist for a company and as part of our current strategy on a project, we plan to use Twitter. However, there has been polarity in opinions when it comes to the recent news of Elon Musk buying Twitter. Therefore, we want to get a better sense of how Twitter users feel about this change through a sentiment analysis, considering it could affect the success of our marketing plan if we were to use Twitter. In order to look further into this, the research question we plan to answer is, "How do Twitter users feel about Elon Musk buying Twitter?". We plan to explore this question using word clouds as well as bar plots. 
+
+#DATA#######################################
+As part of our data collection process, we used Twitter as our data source and first identified key words that will help us scrape the proper data for this analysis. The words we decided to use to scrape the proper data were "Musk" and "Twitter". Once we identified our key words, we then collected the data using rtweet package in R. We searched for original tweets not counting retweets as tweets, allowing for up to 18 thousand. We ran the function at 5 pm on Tuesday November 29th. We collected 17,412 tweets. 
 
 ```{r}
-#musktweetsfinal <- read_csv("C:\\Users\\valen\\Downloads\\musktweetsfinal.csv")
+musktweetsfinal <- read_csv("C:\\Users\\valen\\Downloads\\musktweetsfinal.csv")
 #muskTweets <- read_csv("C:\\Users\\aanes\\Downloads\\muskTweets.csv")
 ```
 
@@ -37,8 +41,7 @@ We search we original tweets, allowing for up to 18 thousand. We ran the functio
 )
 ```
 
-#Overall Analsysis of entire tweet corpus
-
+#DATA_ANALYSIS/EXPLORATION###############################################
 ```{r}
 frequent_terms = freq_terms(musktweetsfinal["text"], 30)
 plot(frequent_terms)
@@ -108,65 +111,161 @@ write.csv(emotionsALL, "C:/Users/aanes/Documents/emotionsAll.csv")
 write.csv(sentimentsAll, "C:/Users/aanes/Documents/sentimentsAll.csv")
 ```
 
-
-
-
-
-```{r}
-head(musktweetsfinal$text, n=10)
+#apple
+```{R}
+apple_tweets = musktweetsfinal%>%filter(str_detect(str_to_lower(text), "apple") == TRUE)
 ```
 
 ```{r}
-colnames(musktweetsfinal)
+frequent_terms_apple = freq_terms(apple_tweets["text"], 30)
+plot(frequent_terms_apple)
 ```
 
 ```{r}
-library(quanteda)
-
-opinionWords = c('Apple', 'apple','@apple', '@Apple', '#Apple', '#apple', 'Apple\'s', 'apple\'s','-Apple','Apples','@AppleSupport','@AppleTVPlus','#MuskTwitterAppleMeltdown','@Apple!','#AppleMusicLive')
-
-muskTweets = data.frame()
-doNotNeed = data.frame()
-
-for(i in 1:nrow(musktweetsfinal)){
-  # break up tweet into individual words
-  tweet = musktweetsfinal$text[i]
-  tweet = tolower(tweet)
-  words = tokens(tweet)
-  # if it contains an irrelevant word, put it in the irrelevant data frame
-  if(length(intersect(words[['text1']], opinionWords))>0){
-    doNotNeed = rbind(doNotNeed, musktweetsfinal[i,])
-  }
-  else{
-    muskTweets = rbind(muskTweets, musktweetsfinal[i,])
-  }
-}
-```
-
-
-
-
-This is a sentiment analysis of the tweets. 
-```{r, eval=FALSE}
-install.packages("SentimentAnalysis")
-library(SentimentAnalysis)
-sentiments = analyzeSentiment(iconv(as.character(muskTweets$text), to='UTF-8'))
-head(sentiments)
+apple_tweets$bagAllTweets = apple_tweets$text %>% iconv("latin1", "ASCII", sub="") %>% scrubber() %sw% qdapDictionaries::Top200Words
 ```
 
 ```{r}
-#PULL IN DATA FROM PREVIOUS CHUNK USING CSV FILE 
-#library(readr)
-#sentiments <- read_csv("C:/Users/aanes/Downloads/sentiments.csv")
-#View(sentiments)
+frequent_terms_apple1 = freq_terms(apple_tweets["bagAllTweets"], 30)
+plot(frequent_terms_apple1)
+```
+```{r}
+frequent_terms_apple2 = freq_terms(apple_tweets["bagAllTweets"], 100)
 ```
 
 ```{r}
-#library(vader)
-# = vader_df(muskTweets$text)
-#sentiments$Vader = vader_scores$compound
-#ggplot(sentiments, aes(x=WordCount, y=Vader)) + geom_point(alpha=.1) + geom_smooth()
+freq_terms_apple2_less <- frequent_terms_apple2[-c(1,2,3,4,5,6,8),]
 ```
+
+```{r}
+#install.packages("wordcloud")
+#install.packages("RColorBrewer")
+
+library(wordcloud)
+library(RColorBrewer)
+```
+
+```{r}
+set.seed(4356)
+wordcloud(words = freq_terms_apple2_less$WORD, freq = freq_terms_apple2_less$FREQ, min.freq = 5,
+          max.words=100, random.order=FALSE, rot.per=0.40, 
+          colors=brewer.pal(8, "Dark2"))
+```
+
+```{r, cache=TRUE}
+sentimentsAll_apple = analyzeSentiment(iconv(as.character(apple_tweets$bagAllTweets), to='UTF-8'))
+```
+
+```{r}
+#install.packages("syuzhet")
+library(syuzhet)
+```
+
+```{r}
+emotionsALL_apple<-get_nrc_sentiment(apple_tweets$bagAllTweets)
+
+```
+
+```{r}
+emotionsALLt_apple<-data.frame(t(emotionsALL_apple))
+#The function rowSums computes column sums across rows for each level of a grouping variable.
+plotemot_apple <- data.frame(rowSums(emotionsALLt_apple[1:17412]))
+#Transformation and cleaning
+names(plotemot_apple)[1] <- "count"
+plotemot_apple <- cbind("sentiment" = rownames(plotemot_apple), plotemot_apple)
+rownames(plotemot_apple) <- NULL
+plotemot_apple2<-plotemot_apple[1:8,]
+#Plot One - count of words associated with each sentiment
+quickplot(sentiment, data=plotemot_apple2, weight=count, geom="bar", fill=sentiment, ylab="count")+ggtitle("Survey sentiments")
+
+```
+```{r}
+write.csv(emotionsALL, "C:/Users/aanes/Documents/emotionsAll.csv")
+write.csv(sentimentsAll, "C:/Users/aanes/Documents/sentimentsAll.csv")
+```
+
+#covid
+
+```{R}
+covid_tweets = musktweetsfinal%>%filter(str_detect(str_to_lower(text), "covid") == TRUE)
+```
+
+```{r}
+frequent_terms_covid = freq_terms(covid_tweets["text"], 30)
+plot(frequent_terms_covid)
+```
+
+```{r}
+covid_tweets$bagAllTweets = covid_tweets$text %>% iconv("latin1", "ASCII", sub="") %>% scrubber() %sw% qdapDictionaries::Top200Words
+```
+
+```{r}
+frequent_terms_covid1 = freq_terms(covid_tweets["bagAllTweets"], 30)
+plot(frequent_terms_covid1)
+```
+```{r}
+frequent_terms_covid2 = freq_terms(covid_tweets["bagAllTweets"], 100)
+```
+
+```{r}
+freq_terms_covid2_less <- frequent_terms_covid2[-c(1,2,3,4,5,6,8),]
+```
+
+```{r}
+#install.packages("wordcloud")
+#install.packages("RColorBrewer")
+
+library(wordcloud)
+library(RColorBrewer)
+```
+
+```{r}
+set.seed(4356)
+wordcloud(words = freq_terms_covid2_less$WORD, freq = freq_terms_covid2_less$FREQ, min.freq = 5,
+          max.words=100, random.order=FALSE, rot.per=0.40, 
+          colors=brewer.pal(8, "Dark2"))
+```
+
+```{r, cache=TRUE}
+sentimentsAll_covid = analyzeSentiment(iconv(as.character(covid_tweets$bagAllTweets), to='UTF-8'))
+```
+
+```{r}
+#install.packages("syuzhet")
+library(syuzhet)
+```
+
+```{r}
+emotionsALL_covid<-get_nrc_sentiment(covid_tweets$bagAllTweets)
+
+```
+
+```{r}
+emotionsALLt_covid<-data.frame(t(emotionsALL_covid))
+#The function rowSums computes column sums across rows for each level of a grouping variable.
+plotemot_covid <- data.frame(rowSums(emotionsALLt_covid[1:17412]))
+#Transformation and cleaning
+names(plotemot_covid)[1] <- "count"
+plotemot_covid <- cbind("sentiment" = rownames(plotemot_covid), plotemot_covid)
+rownames(plotemot_covid) <- NULL
+plotemot_covid2<-plotemot_covid[1:8,]
+#Plot One - count of words associated with each sentiment
+quickplot(sentiment, data=plotemot_covid2, weight=count, geom="bar", fill=sentiment, ylab="count")+ggtitle("Survey sentiments")
+
+```
+```{r}
+write.csv(emotionsALL, "C:/Users/aanes/Documents/emotionsAll.csv")
+write.csv(sentimentsAll, "C:/Users/aanes/Documents/sentimentsAll.csv")
+```
+
+
+
+
+
+
+
+
+
 
 
 
@@ -175,61 +274,7 @@ head(sentiments)
 ggplot(sentiments, aes(x=WordCount, y=SentimentQDAP)) + geom_point(alpha=.1) + geom_smooth()
 ```
 
-```{r}
-library(vader)
-test <- muskTweets[1:1000,]
-vader_scores = vader_df(test$text)
-```
-```{r}
-test2 <- muskTweets[1001:3000,]
-vader_scores2 = vader_df(test2$text)
-```
 
+#RESULTS/DISCUSSION#######################################
 
-
-```{r}
-test3 <- muskTweets[3001:5000,]
-vader_scores3 = vader_df(test3$text)
-```
-```{r}
-test4 <- muskTweets[5001:7000,]
-vader_scores4 = vader_df(test4$text)
-```
-
-```{r}
-test5 <- muskTweets[7001:9000,]
-vader_scores5 = vader_df(test5$text)
-test6 <- muskTweets[9001:11000,]
-vader_scores6 = vader_df(test6$text)
-```
-
-```{r}
-test7 <- muskTweets[11001:13000,]
-vader_scores7 = vader_df(test7$text)
-test8 <- muskTweets[13001:14193,]
-vader_scores8 = vader_df(test8$text)
-```
-
-
-```{r}
-allvader <- rbind(vader_scores, vader_scores2, vader_scores3,vader_scores4,vader_scores5,vader_scores6,vader_scores7,vader_scores8 )
-```
-
-
-
-```{r}
-sentiments$Vader = allvader$compound
-ggplot(sentiments, aes(x=WordCount, y=Vader)) + geom_point(alpha=.1) + geom_smooth()
-```
-
-
-```{r}
-write.csv(sentiments, "C:\\Users\\aanes\\Downloads\\sentiments.csv")
-```
-
-```{r}
-count<- freq(muskTweets$source)
-
-```
-
-
+#RESOURCES#####################################
