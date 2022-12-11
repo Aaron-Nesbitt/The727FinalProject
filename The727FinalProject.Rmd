@@ -1,6 +1,6 @@
 ---
 title: "727 Final Project: "
-author: "Aaron Nesbitt and Jessica Valencia"
+author: "Aaron Nesbitt and Jessica Valencia (Group 9)"
 date: '2022-12-01'
 output: html_document
 ---
@@ -33,13 +33,19 @@ The Github repository was created on Aaron's account where Aaron and Jessica bot
 
 
 #INTRODUCTION#############################################################
-For our project we put ourselves in the position of marketing strategist for a company that is interested in how recent events may affect their relationship and sponsorship with Twitter. As part of our current strategy on a project, we plan to use Twitter data to gain insights from Twitter users. This is important research because there has been polarity in opinions when it comes to the recent news of Elon Musk buying Twitter. Therefore, we want to get a better sense of how Twitter users feel about this change through a word frequency and sentiment analysis, considering it could affect the success of our marketing plan if we were to use Twitter. In order to look further into this, the research question we plan to answer is, "How do Twitter users feel about Elon Musk buying Twitter?". We plan to explore this question using word clouds, barplots, histograms, and density plots. We also examine subgroups that had something to say about Apple or Covid, in relationship to Elon Musk and Twitter. 
+For our project we put ourselves in the position of marketing strategist for a company that is interested in how recent events may affect their relationship and sponsorship with Twitter. As part of our current strategy on a project, we plan to use Twitter data to gain insights from Twitter users. This is important research because there has been polarity in opinions when it comes to the recent news of Elon Musk buying Twitter. Therefore, we want to get a better sense of how Twitter users feel about this change through a word frequency and sentiment analysis, considering it could affect the success of our marketing plan if we were to use Twitter. In order to look further into this, the research question we plan to answer is, "How do Twitter users feel about Elon Musk buying Twitter?". We plan to explore this question using word clouds, barplots, histograms, and density plots. We also examine subgroups that had something to say about Apple or Covid, in relationship to Elon Musk and Twitter. Apple is investiagted based on the news from the company that they woudl consider removing the Twitter app from the app store. With the on going pandemic and heath crisis we look ath those that have something to say about covid. 
 
 #DATA#######################################
 As part of our data collection process, we used Twitter as our data source and first identified key words that will help us search the proper data for this analysis. The words used to search the proper data were "Musk" and "Twitter". We wanted to ensure that we captured those who had an opinion on Elon Musk specifically on his relevancy/involvement to Twitter. Once we identified our key words, we then collected the data using rtweet package in R. We searched for original tweets, not counting retweets,allowing for up to 18 thousand. We ran the function at 5 pm on Tuesday November 29th. We collected 17,412 tweets. We wanted only original tweets to capture a wide range of opinions. Further research may consider retweets as expressions of sentiment on this topic. Additionally the search tweets function matched our goal of capturing a snapshot of widespread feelings on our research topic on a day without any major mainstream breaking news on Musk and his ownership of Twitter.
 
 #MAIN RESULTS SUMMARY############################
-
+  Overall we find the sentiment and emotional flags of the entire corpus of Tweets containing "Musk" and "Twitter" to be more variable than expected. We find trust and fear coded words to be the most frequent in these tweets, indicating a split sentiment in how users of Twitter feel about the new ownership of the platform they are using. Subgroups are created among those who also include reference to Apple or covid. 
+  
+  For tweets with Apple in it, we see fear and anger words at high frequency, but anticipation as well close behind. This aligns with the sentiment analysis findings. WE see a clear negative lean in the sentiment of these tweets however, a healthy balance of positive polarity tweets as well.  
+  
+  
+  There are many opportunities for continued research with this data. More subgroups based on the source of tweet or location could be used to aide decision making on business relationships with Twitter. Also specific to our data for those interested in health, the interesting comparison of high frequency of trust words, but negative sentiment scores could be deeply investigated. An interesting study could be to get twitter users to respond to open ended style survey questions on this topic and use text analysis on those responses. 
+  
 
 ```{r}
 # Space to pull in dataset
@@ -162,7 +168,7 @@ sentimentsAll_apple = analyzeSentiment(iconv(as.character(apple_tweets$bagAllTwe
 ```{r}
 #Creation of Histogram of SentimentQDAP scores for Apple Tweets
 hist(sentimentsAll_apple$SentimentQDAP,
-main="Distribution of SentimentQDAP scores",
+main="Distribution of SentimentQDAP scores among APple Tweets",
 xlab="SentimentQDAP",
 col="tomato1"
 )
@@ -232,7 +238,7 @@ sentimentsAll_covid = analyzeSentiment(iconv(as.character(covid_tweets$bagAllTwe
 
 ```{r}
 hist(sentimentsAll_covid$SentimentQDAP,
-main="Distribution of SentimentQDAP scores",
+main="Distribution of SentimentQDAP scores for Covid Tweets",
 xlab="SentimentQDAP",
 col="cyan3"
 )
@@ -308,17 +314,17 @@ vader_plot
 
 #RESULTS/DISCUSSION#######################################
 
-The first bar graph we created measures the frequency of words in our data set.  We decided to remove stop words in order to get a better representation of the important words that are prevalent in our data. The second bar graph was after we cleaned our data which showed a high prevalence of the words twitter, musk, apple, and covid. We created a word cloud from this data where we found that the word “free elonmusk” was the most prevalent in our data set. Also, This was associated with the words “misinformation”, “hate”, and “money” which we found interesting. We decided to conduct a sentiment analysis bar graph of this data set and found that trust was the highest sentiment detected within the data following with fear. We found this results to be contradicting so we decided to further our analysis.
+The first bar graph we created measures the frequency of words in our data set.  We decided to remove stop words in order to get a better representation of the important words that are prevalent in our data. The second bar graph was after we cleaned our data which showed a high prevalence of the words twitter, musk, apple, and covid. We created a word cloud from this data where we found that the word “free", "speech”, and "apple" was the most prevalent in our data set. Potenitally persons are concerned about Twitter as a platform for free speech expression. Also, This was associated with the words “misinformation”, “hate”, and “money” which we found interesting. We decided to conduct a sentiment analysis bar graph of this data set and found that trust was the highest sentiment detected within the data following with fear. We found this results to be contradicting so we decided to further our analysis and see if different topics had specific emotional attachments.
 
-Since we initially found a high prevalence of covid and apple in our data set, we thought it would be interesting to further look into this correlation. We conducted a word cloud for apple where we found associated words such as, “framing”, “boycotting”, and “violating”. We found that the association of apple, musk, and twitter to have a negative sentiment but we decided to verify this and further investigate through a sentiment bar graph. As anticipated, the highest sentiment value associated to apple, elon musk, and twitter is fear being the highest and anger being the second highest. We found these results to be interesting considering the current news that Apple might potentially remove Twitter from the app store. This makes us believe that twitter users are upset about the news. 
+Since we initially found a high prevalence of covid and apple in our data set, we thought it would be interesting to further look into these subgroups. Therefore we filted from the entire corpus to create data that must include "apple" and then seperately tweets that include "covid". We conducted a word cloud for apple where we found associated words such as, “framing”, “boycotting”, and “violating”. We found that the association of apple, musk, and twitter to have a negative sentiment but we decided to verify this and further investigate through an emotion sentiment bar graph. As anticipated, the highest sentiment value associated to apple, musk, and twitter is fear being the highest and anger being the second highest. We found these results to be interesting considering the current news that Apple might potentially remove Twitter from the app store. This makes us believe that twitter users are upset about the news.  
 
-We continued our analysis by looking into the association between covid, musk, and twitter. We found “misinformation” to be the most present word in our word cloud along with “policing” and “suspended”. This compelled us to conduct a sentiment bar graph where we found a significant difference between the sentiments where trust was detected the most, followed by fear and anger. However, trust showed up twice as much than any other sentiment in this analysis. We find according to the word cloud and sentiment bar graph, a lack of trust could be detected here.
+We continued our analysis by looking into the association between covid, musk, and twitter. We found “misinformation” to be the most present word. It was left out of the word cloud for optimal visualization appearance. Also very frequent, as shown in our word cloud, were “policing” and “suspended”. This compelled us to conduct a sentiment bar graph where we found a significant difference between the sentiments where trust was detected the most, followed by fear and anger. However, trust showed up twice as much than any other sentiment in this analysis. We find according to the word cloud and sentiment bar graph, a lack of trust could be detected here.
 
-(CAN YOU EXPLAIN THE LAST 3 GRAPHS HERE) 
+Looking at the SentimentQDAP scores for Apple. Within the distribution we the center of the data fall below zero, indicating a more negative polarity in the tweets. Although small in magnitude, the majority of tweets lie within the -.2 and 0 range. The range of negative scores is wider than positive, showing more extreme negative polarity cases. Comparatively we see a similar center of scores in the histogram for SentimentQDAP scores for Covid Tweets. However, this graph less resembles the normal curve. Around the most prevalent tweet score we see a much more drastic difference when crossing into positive scores than we did in the Apple Tweets. Further comparison is needed to explore the difference in the two topics. This is important visualizations for a company that may have either tach or health connections and is interested in these Elon Musk and Twitter sentiments that are specific to a subtopic.
+
+Lastly, we analyze a density plot of Vader scores, with mean lines, to visualize the sentiments of the tweets among each subgroup. We see that while both groups have a mean Vader comound score below zero, indicating more negative sentiment, but the Apple tweets show less variability comparatively. The mean Vader score for tweets with covid is -0.375 while that for tweets with Apple is  -0.160. With similar fluctuations as the covid tweets, the Apple brand tweets do not experience as extreme changes in density. Therefore, we see that those who have something to say about covid are more likely to have negativity in their tweets that those who have something to say about Apple. The peak of Vader scores for tweets with Covid lies right below -0.5 (towards -1). This is a moderately strong negative score. This can inform use of Twitter as an advertising platform based on industry affiliations and interests. 
 
 
 Overall, through our analysis we can say that there is a higher prevalence of negative sentiment towards elon musk and twitter than positive sentiment. As marketing strategists, it would not be ideal to utilize Twitter as part of our marketing strategy. 
 
 
-
-#RESOURCES#####################################
