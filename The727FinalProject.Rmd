@@ -32,13 +32,13 @@ The Github repository was created on Aaron's account where Aaron and Jessica bot
 
 
 
-###INTRODUCTION
+### INTRODUCTION
 For our project we put ourselves in the position of marketing strategist for a company that is interested in how recent events may affect their relationship and sponsorship with Twitter. As part of our current strategy on a project, we plan to use Twitter data to gain insights from Twitter users. This is important research because there has been polarity in opinions when it comes to the recent news of Elon Musk buying Twitter. Therefore, we want to get a better sense of how Twitter users feel about this change through a word frequency and sentiment analysis, considering it could affect the success of our marketing plan if we were to use Twitter. In order to look further into this, the research question we plan to answer is, "How do Twitter users feel about Elon Musk buying Twitter?". We plan to explore this question using word clouds, barplots, histograms, and density plots. We also examine subgroups that had something to say about Apple or Covid, in relationship to Elon Musk and Twitter. Apple is investiagted based on the news from the company that they woudl consider removing the Twitter app from the app store. With the on going pandemic and heath crisis we look ath those that have something to say about covid. 
 
-###DATA
+### DATA
 As part of our data collection process, we used Twitter as our data source and first identified key words that will help us search the proper data for this analysis. The words used to search the proper data were "Musk" and "Twitter". We wanted to ensure that we captured those who had an opinion on Elon Musk specifically on his relevancy/involvement to Twitter. Once we identified our key words, we then collected the data using rtweet package in R. We searched for original tweets, not counting retweets,allowing for up to 18 thousand. We ran the function at 5 pm on Tuesday November 29th. We collected 17,412 tweets. We wanted only original tweets to capture a wide range of opinions. Further research may consider retweets as expressions of sentiment on this topic. Additionally the search tweets function matched our goal of capturing a snapshot of widespread feelings on our research topic on a day without any major mainstream breaking news on Musk and his ownership of Twitter.
 
-###MAIN RESULTS SUMMARY
+### MAIN RESULTS SUMMARY
   Overall we find the sentiment and emotional flags of the entire corpus of Tweets containing "Musk" and "Twitter" to be more variable than expected. We find trust and fear coded words to be the most frequent in these tweets, indicating a split sentiment in how users of Twitter feel about the new ownership of the platform they are using. Subgroups are created among those who also include reference to Apple or covid. 
   
   For tweets with Apple in it, we see fear and anger words at high frequency, but anticipation as well close behind. This aligns with the sentiment analysis findings. We see a clear negative lean in the sentiment of these tweets however, a prevalent balance of positive polarity tweets as well. The data when compared to that of those that had something to say about covid, resembles a normal curve more. An interesting contrast in the covid data between emotion sentiment analysis and polarity scores. We see a very high frequency in trust words from the covid tweets, but a very clear negative sentiment when looking at SentimentQDAP and Vader compound scores. The Vader scores of the Covid tweets have a more negative mean than Apple tweets and a more drastic majority of tweets with negative SentimentQDAP scores and Vader scores.  
@@ -63,7 +63,7 @@ musktweetsfinal <- read_csv("C:/Users/aanes/Documents/musktweetsfinal.csv")
 )
 ```
 
-###DATA_ANALYSIS/EXPLORATION
+### DATA_ANALYSIS/EXPLORATION
 Overall tweet corpus analysis.
 ```{r}
 #Frequent words
@@ -72,12 +72,12 @@ plot(frequent_terms)
 ```
 
 ```{r}
-#Remove stopwords
+# Remove stopwords
 musktweetsfinal$bagAllTweets = musktweetsfinal$text %>% iconv("latin1", "ASCII", sub="") %>% scrubber() %sw% qdapDictionaries::Top200Words
 ```
 
 ```{r}
-#Frequent words after removing stop words
+# Frequent words after removing stop words
 frequent_terms2 = freq_terms(musktweetsfinal["bagAllTweets"], 30)
 plot(frequent_terms2)
 ```
@@ -128,7 +128,7 @@ quickplot(sentiment, data=plotemot2, weight=count, geom="bar", fill=sentiment, y
 ```
 
 
-#apple
+# apple
 ```{R}
 apple_tweets = musktweetsfinal%>%filter(str_detect(str_to_lower(text), "apple") == TRUE)
 ```
@@ -198,7 +198,7 @@ quickplot(sentiment, data=plotemot_apple2, weight=count2, geom="bar", fill=senti
 ```
 
 
-#covid
+# covid
 
 ```{R}
 covid_tweets = musktweetsfinal%>%filter(str_detect(str_to_lower(text), "covid") == TRUE)
@@ -314,7 +314,7 @@ vader_plot
 ```
 
 
-###RESULTS/DISCUSSION
+### RESULTS/DISCUSSION
 
 The first bar graph we created measures the frequency of words in our data set.  We decided to remove stop words in order to get a better representation of the important words that are prevalent in our data. The second bar graph was after we cleaned our data which showed a high prevalence of the words twitter, musk, apple, and covid. We created a word cloud from this data where we found that the word “free", "speech”, and "apple" was the most prevalent in our data set. Potenitally persons are concerned about Twitter as a platform for free speech expression. Also, This was associated with the words “misinformation”, “hate”, and “money” which we found interesting. We decided to conduct a sentiment analysis bar graph of this data set and found that trust was the highest sentiment detected within the data following with fear. We found this results to be contradicting so we decided to further our analysis and see if different topics had specific emotional attachments.
 
