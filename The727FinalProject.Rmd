@@ -1,5 +1,5 @@
 ---
-title: "The727FinalProject"
+title: "727 Final Project: "
 author: "Aaron Nesbitt and Jessica Valencia"
 date: '2022-12-01'
 output: html_document
@@ -9,7 +9,7 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-```{r}
+```{r message=FALSE, warning=FALSE}
 library(readr)
 library(dplyr)
 library(rtweet)
@@ -20,6 +20,7 @@ library(tidytext)
 library(ggmap)
 library(rJava)
 library(qdap)
+library(SentimentAnalysis)
 ```
 
 #INTRODUCTION#############################################################
@@ -101,7 +102,8 @@ count <- c(8500, 7995, 5374, 9296, 5726, 6836, 3328, 10627, 15611, 18394)
 plotemot <- data.frame(sentiment, count)
 
 plotemot2<-plotemot[1:8,]
-#Plot One - count of words associated with each sentiment
+
+
 quickplot(sentiment, data=plotemot2, weight=count, geom="bar", fill=sentiment, ylab="count")+ggtitle("Survey sentiments")
 
 ```
@@ -158,6 +160,15 @@ sentimentsAll_apple = analyzeSentiment(iconv(as.character(apple_tweets$bagAllTwe
 ```
 
 ```{r}
+hist(sentimentsAll_apple$SentimentQDAP,
+main="Distribution of SentimentQDAP scores",
+xlab="SentimentQDAP",
+col="tomato1"
+)
+```
+
+
+```{r}
 #install.packages("syuzhet")
 library(syuzhet)
 ```
@@ -178,7 +189,6 @@ count2 <- c(2304, 2027, 1073, 2450, 886, 1622, 525, 1626, 3700, 3868)
 plotemot_apple <- data.frame(sentiment, count2)
 plotemot_apple2<-plotemot_apple[1:8,]
 
-#Plot One - count of words associated with each sentiment
 quickplot(sentiment, data=plotemot_apple2, weight=count2, geom="bar", fill=sentiment, ylab="count")+ggtitle("Survey sentiments")
 
 ```
@@ -235,6 +245,16 @@ sentimentsAll_covid = analyzeSentiment(iconv(as.character(covid_tweets$bagAllTwe
 ```
 
 ```{r}
+hist(sentimentsAll_covid$SentimentQDAP,
+main="Distribution of SentimentQDAP scores",
+xlab="SentimentQDAP",
+col="cyan3"
+)
+```
+
+
+
+```{r}
 #install.packages("syuzhet")
 library(syuzhet)
 ```
@@ -255,27 +275,47 @@ count3 <- c(313, 209, 172, 370, 134, 191, 94, 704, 539, 539)
 plotemot_covid <- data.frame(sentiment, count3)
 plotemot_covid2<-plotemot_covid[1:8,]
 
-#Plot One - count of words associated with each sentiment
 quickplot(sentiment, data=plotemot_covid2, weight=count3, geom="bar", fill=sentiment, ylab="count")+ggtitle("Survey sentiments")
 
 ```
 
+
+# Vader comparison 
 ```{r}
-write.csv(emotionsALL, "C:/Users/aanes/Documents/emotionsAll.csv")
-write.csv(sentimentsAll, "C:/Users/aanes/Documents/sentimentsAll.csv")
+library(vader)
+vader_scores_covid = vader_df(covid_tweets$text)
+```
+```{r}
+vader_scores_apple = vader_df(apple_tweets$text)
+```
+
+```{r}
+vader_scores_apple2 <- vader_scores_apple %>%
+  add_column(tweet_word = "apple")
+```
+```{r}
+vader_scores_covid2 <- vader_scores_covid %>%
+  add_column(tweet_word = "covid")
+```
+
+```{r}
+vader_apple_covid <- rbind(vader_scores_apple2, vader_scores_covid2)
+```
+
+```{r}
+mean(vader_scores_apple$compound)
+mean(vader_scores_covid$compound)
+
 ```
 
 
 ```{r}
-ggplot(sentimentsAll, aes(x=WordCount, y=SentimentQDAP)) + geom_point(alpha=.1) + geom_smooth()
-```
-
-```{r}
-ggplot(sentimentsAll_apple, aes(x=WordCount, y=SentimentQDAP)) + geom_point(alpha=.1) + geom_smooth()
-```
-
-```{r}
-ggplot(sentimentsAll_covid, aes(x=WordCount, y=SentimentQDAP)) + geom_point(alpha=.1) + geom_smooth()
+vader_plot<-ggplot(vader_apple_covid, aes(x=compound, color=tweet_word)) +
+  geom_histogram(fill="white", position="dodge")+
+  geom_vline(xintercept = -0.1599877, colour="tomato1", linetype = "longdash")+
+  geom_vline(xintercept = -0.3754423, colour="cyan3", linetype = "longdash")+
+  theme(legend.position="top")
+vader_plot
 ```
 
 
