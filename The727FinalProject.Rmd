@@ -21,20 +21,33 @@ library(ggmap)
 library(rJava)
 library(qdap)
 library(SentimentAnalysis)
+library(syuzhet)
+library(wordcloud)
+library(RColorBrewer)
 ```
+#GITHUB#######################################
+https://github.com/Aaron-Nesbitt/The727FinalProject.git
+
+The Github repository was created on Aaron's account where Aaron and Jessica both collaborated as editors and committed changes.
+
+
 
 #INTRODUCTION#############################################################
-For our project we put ourselves in the position of marketing strategist for a company and as part of our current strategy on a project, we plan to use Twitter. However, there has been polarity in opinions when it comes to the recent news of Elon Musk buying Twitter. Therefore, we want to get a better sense of how Twitter users feel about this change through a sentiment analysis, considering it could affect the success of our marketing plan if we were to use Twitter. In order to look further into this, the research question we plan to answer is, "How do Twitter users feel about Elon Musk buying Twitter?". We plan to explore this question using word clouds as well as bar plots. 
+For our project we put ourselves in the position of marketing strategist for a company that is interested in how recent events may affect their relationship and sponsorship with Twitter. As part of our current strategy on a project, we plan to use Twitter data to gain insights from Twitter users. This is important research because there has been polarity in opinions when it comes to the recent news of Elon Musk buying Twitter. Therefore, we want to get a better sense of how Twitter users feel about this change through a word frequency and sentiment analysis, considering it could affect the success of our marketing plan if we were to use Twitter. In order to look further into this, the research question we plan to answer is, "How do Twitter users feel about Elon Musk buying Twitter?". We plan to explore this question using word clouds, barplots, histograms, and density plots. We also examine subgroups that had something to say about Apple or Covid, in relationship to Elon Musk and Twitter. 
 
 #DATA#######################################
-As part of our data collection process, we used Twitter as our data source and first identified key words that will help us scrape the proper data for this analysis. The words we decided to use to scrape the proper data were "Musk" and "Twitter". Once we identified our key words, we then collected the data using rtweet package in R. We searched for original tweets not counting retweets as tweets, allowing for up to 18 thousand. We ran the function at 5 pm on Tuesday November 29th. We collected 17,412 tweets. 
+As part of our data collection process, we used Twitter as our data source and first identified key words that will help us search the proper data for this analysis. The words used to search the proper data were "Musk" and "Twitter". We wanted to ensure that we captured those who had an opinion on Elon Musk specifically on his relevancy/involvement to Twitter. Once we identified our key words, we then collected the data using rtweet package in R. We searched for original tweets, not counting retweets,allowing for up to 18 thousand. We ran the function at 5 pm on Tuesday November 29th. We collected 17,412 tweets. We wanted only original tweets to capture a wide range of opinions. Further research may consider retweets as expressions of sentiment on this topic. Additionally the search tweets function matched our goal of capturing a snapshot of widespread feelings on our research topic on a day without any major mainstream breaking news on Musk and his ownership of Twitter.
+
+#MAIN RESULTS SUMMARY############################
+
 
 ```{r}
-#musktweetsfinal <- read_csv("C:\\Users\\valen\\Downloads\\musktweetsfinal.csv")
-musktweetsfinal <- read_csv("C:\\Users\\aanes\\Downloads\\muskTweets.csv")
+# Space to pull in dataset
+#musktweetsfinal <- read_csv("")
 ```
 
 ```{r eval=FALSE, include=FALSE}
+# Method used for data collection
 #musk <- search_tweets(
 #  q = "musk Twitter, lang:en",
 #  n = 18000,
@@ -43,33 +56,36 @@ musktweetsfinal <- read_csv("C:\\Users\\aanes\\Downloads\\muskTweets.csv")
 ```
 
 #DATA_ANALYSIS/EXPLORATION###############################################
+Overall tweet corpus analysis.
 ```{r}
+#Frequent words
 frequent_terms = freq_terms(musktweetsfinal["text"], 30)
 plot(frequent_terms)
 ```
 
 ```{r}
+#Remove stopwords
 musktweetsfinal$bagAllTweets = musktweetsfinal$text %>% iconv("latin1", "ASCII", sub="") %>% scrubber() %sw% qdapDictionaries::Top200Words
 ```
 
 ```{r}
+#Frequent words after removing stop words
 frequent_terms2 = freq_terms(musktweetsfinal["bagAllTweets"], 30)
 plot(frequent_terms2)
 ```
+
 ```{r}
 frequent_terms3 = freq_terms(musktweetsfinal["bagAllTweets"], 100)
 ```
 
 ```{r}
+#Eliminating Non important words 
 freq_terms3_less <- frequent_terms3[-c(1,2,3,4,5,6,8),]
 ```
 
+All Tweets Word Cloud
 ```{r}
-library(wordcloud)
-library(RColorBrewer)
-```
-
-```{r}
+#Word Cloud, overall
 set.seed(4356)
 wordcloud(words = freq_terms3_less$WORD, freq = freq_terms3_less$FREQ, min.freq = 5,
           max.words=100, random.order=FALSE, rot.per=0.40, 
@@ -83,12 +99,7 @@ head(sentiments)
 ```
 
 ```{r}
-library(syuzhet)
-```
-
-```{r}
 emotionsALL<-get_nrc_sentiment(musktweetsfinal$bagAllTweets)
-
 ```
 
 ```{r}
@@ -104,14 +115,10 @@ plotemot <- data.frame(sentiment, count)
 plotemot2<-plotemot[1:8,]
 
 
-quickplot(sentiment, data=plotemot2, weight=count, geom="bar", fill=sentiment, ylab="count")+ggtitle("Survey sentiments")
+quickplot(sentiment, data=plotemot2, weight=count, geom="bar", fill=sentiment, ylab="count")+ggtitle("Tweet sentiments among All Tweets")
 
 ```
 
-```{r}
-write.csv(emotionsALL, "C:/Users/aanes/Documents/emotionsAll.csv")
-write.csv(sentimentsAll, "C:/Users/aanes/Documents/sentimentsAll.csv")
-```
 
 #apple
 ```{R}
@@ -131,22 +138,16 @@ apple_tweets$bagAllTweets = apple_tweets$text %>% iconv("latin1", "ASCII", sub="
 frequent_terms_apple1 = freq_terms(apple_tweets["bagAllTweets"], 30)
 plot(frequent_terms_apple1)
 ```
+
 ```{r}
 frequent_terms_apple2 = freq_terms(apple_tweets["bagAllTweets"], 100)
 ```
 
 ```{r}
-freq_terms_apple2_less <- frequent_terms_apple2[-c(1,2,3,4,5,6,7),]
+freq_terms_apple2_less <- frequent_terms_apple2[-c(1,2,3,4,5,6,7,10),]
 ```
 
-```{r}
-#install.packages("wordcloud")
-#install.packages("RColorBrewer")
-
-library(wordcloud)
-library(RColorBrewer)
-```
-
+Apple Tweet Word Cloud
 ```{r}
 set.seed(4356)
 wordcloud(words = freq_terms_apple2_less$WORD, freq = freq_terms_apple2_less$FREQ, min.freq = 5,
@@ -155,11 +156,11 @@ wordcloud(words = freq_terms_apple2_less$WORD, freq = freq_terms_apple2_less$FRE
 ```
 
 ```{r, cache=TRUE}
-library(SentimentAnalysis)
 sentimentsAll_apple = analyzeSentiment(iconv(as.character(apple_tweets$bagAllTweets), to='UTF-8'))
 ```
 
 ```{r}
+#Creation of Histogram of SentimentQDAP scores for Apple Tweets
 hist(sentimentsAll_apple$SentimentQDAP,
 main="Distribution of SentimentQDAP scores",
 xlab="SentimentQDAP",
@@ -167,11 +168,6 @@ col="tomato1"
 )
 ```
 
-
-```{r}
-#install.packages("syuzhet")
-library(syuzhet)
-```
 
 ```{r}
 emotionsALL_apple<-get_nrc_sentiment(apple_tweets$bagAllTweets)
@@ -189,13 +185,10 @@ count2 <- c(2304, 2027, 1073, 2450, 886, 1622, 525, 1626, 3700, 3868)
 plotemot_apple <- data.frame(sentiment, count2)
 plotemot_apple2<-plotemot_apple[1:8,]
 
-quickplot(sentiment, data=plotemot_apple2, weight=count2, geom="bar", fill=sentiment, ylab="count")+ggtitle("Survey sentiments")
+quickplot(sentiment, data=plotemot_apple2, weight=count2, geom="bar", fill=sentiment, ylab="count")+ggtitle("Twitter sentiments Among Tweets with Apple")
 
 ```
-```{r}
-write.csv(emotionsALL, "C:/Users/aanes/Documents/emotionsAll.csv")
-write.csv(sentimentsAll, "C:/Users/aanes/Documents/sentimentsAll.csv")
-```
+
 
 #covid
 
@@ -222,18 +215,11 @@ frequent_terms_covid2 = freq_terms(covid_tweets["bagAllTweets"], 100)
 ```
 
 ```{r}
-freq_terms_covid2_less <- frequent_terms_covid2[-c(1,2,3,4,5,6,8),]
+freq_terms_covid2_less <- frequent_terms_covid2[-c(1,2,3,4,5,6,9),]
 ```
 
-```{r}
-#install.packages("wordcloud")
-#install.packages("RColorBrewer")
-
-library(wordcloud)
-library(RColorBrewer)
-```
-
-```{r}
+Covid Tweets Word Cloud
+```{r message=FALSE, warning=FALSE}
 set.seed(4356)
 wordcloud(words = freq_terms_covid2_less$WORD, freq = freq_terms_covid2_less$FREQ, min.freq = 5,
           max.words=100, random.order=FALSE, rot.per=0.40, 
@@ -275,12 +261,12 @@ count3 <- c(313, 209, 172, 370, 134, 191, 94, 704, 539, 539)
 plotemot_covid <- data.frame(sentiment, count3)
 plotemot_covid2<-plotemot_covid[1:8,]
 
-quickplot(sentiment, data=plotemot_covid2, weight=count3, geom="bar", fill=sentiment, ylab="count")+ggtitle("Survey sentiments")
+quickplot(sentiment, data=plotemot_covid2, weight=count3, geom="bar", fill=sentiment, ylab="count")+ggtitle("Twitter sentiments among tweets with Covid")
 
 ```
 
 
-# Vader comparison 
+Vader comparison 
 ```{r}
 library(vader)
 vader_scores_covid = vader_df(covid_tweets$text)
@@ -314,7 +300,8 @@ vader_plot<-ggplot(vader_apple_covid, aes(x=compound, color=tweet_word)) +
   geom_density(position="dodge")+
   geom_vline(xintercept = -0.1599877, colour="tomato1", linetype = "longdash")+
   geom_vline(xintercept = -0.3754423, colour="cyan3", linetype = "longdash")+
-  theme(legend.position="top")
+  theme(legend.position="top")+
+  ggtitle("Vader Score among tweets with Apple and Covid inclusion; with mean lines")
 vader_plot
 ```
 
