@@ -281,4 +281,17 @@ ggplot(sentimentsAll_covid, aes(x=WordCount, y=SentimentQDAP)) + geom_point(alph
 
 #RESULTS/DISCUSSION#######################################
 
+The first bar graph we created measures the frequency of words in our data set.  We decided to remove stop words in order to get a better representation of the important words that are prevalent in our data. The second bar graph was after we cleaned our data which showed a high prevalence of the words twitter, musk, apple, and covid. We created a word cloud from this data where we found that the word “free elonmusk” was the most prevalent in our data set. Also, This was associated with the words “misinformation”, “hate”, and “money” which we found interesting. We decided to conduct a sentiment analysis bar graph of this data set and found that trust was the highest sentiment detected within the data following with fear. We found this results to be contradicting so we decided to further our analysis.
+
+Since we initially found a high prevalence of covid and apple in our data set, we thought it would be interesting to further look into this correlation. We conducted a word cloud for apple where we found associated words such as, “framing”, “boycotting”, and “violating”. We found that the association of apple, musk, and twitter to have a negative sentiment but we decided to verify this and further investigate through a sentiment bar graph. As anticipated, the highest sentiment value associated to apple, elon musk, and twitter is fear being the highest and anger being the second highest. We found these results to be interesting considering the current news that Apple might potentially remove Twitter from the app store. This makes us believe that twitter users are upset about the news. 
+
+We continued our analysis by looking into the association between covid, musk, and twitter. We found “misinformation” to be the most present word in our word cloud along with “policing” and “suspended”. This compelled us to conduct a sentiment bar graph where we found a significant difference between the sentiments where trust was detected the most, followed by fear and anger. However, trust showed up twice as much than any other sentiment in this analysis. We find according to the word cloud and sentiment bar graph, a lack of trust could be detected here.
+
+(CAN YOU EXPLAIN THE LAST 3 GRAPHS HERE) 
+
+
+Overall, through our analysis we can say that there is a higher prevalence of negative sentiment towards elon musk and twitter than positive sentiment. As marketing strategists, it would not be ideal to utilize Twitter as part of our marketing strategy. 
+
+
+
 #RESOURCES#####################################
